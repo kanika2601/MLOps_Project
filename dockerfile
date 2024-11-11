@@ -1,21 +1,22 @@
-# Step 1: Specify the Base Image
-FROM tensorflow/tensorflow:latest-gpu  # or use 'tensorflow/tensorflow:latest'
+# Use an official Python runtime as a parent image
+FROM python:3.9
 
-# Step 2: Set the Working Directory
+# Set the working directory
 WORKDIR /app
 
-# Step 3: Copy Project Files
-# Copy the project files (code, dependencies, etc.) into the container
+# Copy the current directory contents into the container at /app
 COPY . /app
 
-# Step 4: Install Dependencies
-# Install required Python packages listed in requirements.txt
-RUN pip install --upgrade pip && pip install -r requirements.txt
+# Copy the model.pkl file into the container
+COPY model.pkl /app/
 
-# Step 5: Environment Setup (Optional)
-# Set environment variables for better reproducibility (if required by your model)
-ENV MODEL_NAME="gan_model"
+# Install the required packages
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Step 6: Define the Entry Point or Run Command
-# This command will be executed when the container starts
-CMD ["python", "train.py"]
+# Expose the port Streamlit runs on
+EXPOSE 8501
+
+# Run the Streamlit app
+CMD ["streamlit", "run", "app.py"]
+
+
