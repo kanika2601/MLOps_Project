@@ -1,22 +1,15 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9
+# Step 1: Choose the base image
+FROM tensorflow/tensorflow:latest-gpu  # Use tensorflow/tensorflow:latest for CPU only
 
-# Set the working directory
+# Step 2: Set the working directory inside the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
+# Step 3: Copy your project files into the container
 COPY . /app
 
-# Copy the model.pkl file into the container
-COPY model.pkl /app/
+# Step 4: Install required Python packages
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt  # Make sure you have a requirements.txt file in your project
 
-# Install the required packages
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Expose the port Streamlit runs on
-EXPOSE 8501
-
-# Run the Streamlit app
-CMD ["streamlit", "run", "app.py"]
-
-
+# Step 5: Define the command to run your GAN model
+CMD ["python", "train.py"]  # Replace train.py with your main script name if different
